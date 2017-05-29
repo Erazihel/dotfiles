@@ -33,3 +33,7 @@ source ~/.fluozshrc
 alias zshconfig="vi ~/.zshrc"
 alias glog="git log --graph --abbrev-commit --decorate --date=relative --all"
 alias pnp="gup && gp"
+alias weather="curl wttr.in/paris"
+alias tf="terraform"
+
+export PATH="$HOME/.yarn/bin:$PATH"
