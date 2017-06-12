@@ -26,6 +26,9 @@ export ANDROID_SDK=$ANDROID_HOME
 # jEnv
 eval "$(jenv init -)"
 
+# Yarn
+export PATH="$HOME/.yarn/bin:$PATH"
+
 #External configurations
 source ~/.fluozshrc
 
@@ -36,4 +39,6 @@ alias pnp="gup && gp"
 alias weather="curl wttr.in/paris"
 alias tf="terraform"
 
-export PATH="$HOME/.yarn/bin:$PATH"
+function gdc() {
+	git diff "$1"^ "$1"
+}
