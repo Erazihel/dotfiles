@@ -29,6 +29,17 @@ eval "$(jenv init -)"
 # Yarn
 export PATH="$HOME/.yarn/bin:$PATH"
 
+# VSCode
+export PATH="$PATH:/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
+
+# Start GPG Agent
+eval $(gpg-agent --daemon)
+eval $(gpg-agent --default-cache-ttl 3600)
+
+# Start SSH Agent
+eval `ssh-agent -s`
+eval `ssh-add ~/.ssh/id_rsa`
+
 #External configurations
 source ~/.fluozshrc
 
@@ -38,6 +49,7 @@ alias glog="git log --graph --abbrev-commit --decorate --date=relative --all"
 alias pnp="gup && gp"
 alias weather="curl wttr.in/paris"
 alias tf="terraform"
+alias tg="terragrunt"
 alias vim="nvim"
 
 function gdc() {
