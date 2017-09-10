@@ -33,11 +33,12 @@ export PATH="$HOME/.yarn/bin:$PATH"
 source ~/.fluozshrc
 
 # User configuration
-alias zshconfig="vi ~/.zshrc"
+alias zshconfig="vim ~/.zshrc"
 alias glog="git log --graph --abbrev-commit --decorate --date=relative --all"
 alias pnp="gup && gp"
 alias weather="curl wttr.in/paris"
 alias tf="terraform"
+alias vim="nvim"
 
 function gdc() {
 	git diff "$1"^ "$1"
