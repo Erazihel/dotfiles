@@ -5,6 +5,7 @@ call plug#begin('~/.config/nvim/plugged')
 
 Plug 'ajh17/VimCompletesMe'
 Plug 'arcticicestudio/nord-vim'
+Plug 'chemzqm/vim-jsx-improve'
 Plug 'editorconfig/editorconfig-vim'
 Plug 'flowtype/vim-flow', { 'for': ['javascript', 'javascript.jsx'] }
 Plug 'honza/vim-snippets'
