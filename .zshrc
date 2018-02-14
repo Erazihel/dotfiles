@@ -7,51 +7,34 @@ ZSH_THEME="bullet-train"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git zsh-autosuggestions autojump brew dirhistory gitfast last-working-dir npm zsh-syntax-highlighting)
+plugins=(git zsh-autosuggestions autojump brew gitfast npm zsh-syntax-highlighting)
 
 source $ZSH/oh-my-zsh.sh
 
+export LC_ALL=en_US.UTF-8
+export LANG=en_US.UTF-8
+
 # NVM
 export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
-
-# RVM
-export RVM_DIR="$HOME/.rvm"
-[ -s "$RVM_DIR/scripts/rvm" ] && source "$RVM_DIR/scripts/rvm"
-
-# Android
-export ANDROID_HOME=~/Library/Android/sdk
-export ANDROID_SDK=$ANDROID_HOME
-
-# jEnv
-eval "$(jenv init -)"
-
-# Yarn
-export PATH="$HOME/.yarn/bin:$PATH"
+source $(brew --prefix nvm)/nvm.sh
 
 # VSCode
 export PATH="$PATH:/Applications/Visual Studio Code.app/Contents/Resources/app/bin"
 
-# Start GPG Agent
-eval $(gpg-agent --daemon)
-eval $(gpg-agent --default-cache-ttl 3600)
-
-# Start SSH Agent
-eval `ssh-agent -s`
-eval `ssh-add ~/.ssh/id_rsa`
-
 #External configurations
-source ~/.fluozshrc
+source ~/.externalzshrc
 
 # User configuration
 alias zshconfig="vim ~/.zshrc"
-alias glog="git log --graph --abbrev-commit --decorate --date=relative --all"
+alias gbdr="git fetch --all -p; git branch -vv | grep ": gone]" | awk '{ print $1 }' | xargs -n 1 git branch -D"
+alias glog="git rev-parse --abbrev-ref HEAD | xargs git log --graph --abbrev-commit --decorate --date=relative --first-parent"
 alias pnp="gup && gp"
 alias weather="curl wttr.in/paris"
-alias tf="terraform"
-alias tg="terragrunt"
 alias vim="nvim"
 
 function gdc() {
 	git diff "$1"^ "$1"
 }
+
+[ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+[ -f /usr/local/etc/profile.d/autojump.sh ]
