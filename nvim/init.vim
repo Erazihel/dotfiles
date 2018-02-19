@@ -188,7 +188,7 @@ nnoremap <leader>s :call Save()<CR>
 nnoremap <silent> <leader>n :Explore<CR>
 
 nnoremap <leader>g :Ag
-nnoremap <silent> <leader>f :Files<CR>
+nnoremap <silent> <leader>f :GFiles<CR>
 nnoremap <silent> <leader>b :Buffers<CR>
 nnoremap <silent> <leader>h :History<CR>
 nnoremap <silent> <leader>P :ALEFix<CR>
