@@ -2,6 +2,14 @@
 
 echo Install in progress..
 
+echo Installing Brew
+/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+
+brew install wget
+
+echo Installing OhMyZsh
+sh -c "$(wget https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)"
+
 echo ZSH config..
 ln -sf $(pwd)/.zshrc ~
 git clone https://github.com/zsh-users/zsh-autosuggestions $ZSH_CUSTOM/plugins/zsh-autosuggestions
@@ -14,6 +22,8 @@ git clone https://github.com/zsh-users/zsh-autosuggestions $ZSH_CUSTOM/plugins/z
 echo Done!
 
 echo Vim..
+brew install neovim
+
 mkdir -p ~/.config/nvim
 
 if [ ! -d ~/.fzf ]; then
