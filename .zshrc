@@ -23,7 +23,7 @@ source ~/.externalzshrc
 
 # User configuration
 alias zshconfig="nvim ~/.zshrc"
-alias gbdr="git fetch -p; for branch in `git branch -vv | grep ': gone]' | awk '{print $1}'`; do git branch -D $branch; done"
+alias gbdr="git fetch -p; git branch -vv | grep ': gone]' | awk '{print $1}' | xargs git branch -D"
 alias glog="git rev-parse --abbrev-ref HEAD | xargs git log --graph --abbrev-commit --decorate --date=relative --first-parent"
 alias pnp="gup && gp"
 alias weather="curl wttr.in/paris"

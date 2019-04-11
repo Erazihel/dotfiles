@@ -11,7 +11,7 @@ Plug 'jaawerth/nrun.vim'
 Plug 'w0rp/ale'
 
 " Completion
-Plug 'roxma/nvim-completion-manager'
+Plug 'lifepillar/vim-mucomplete'
 
 " Fuzzy finder
 Plug 'junegunn/fzf', { 'dir': '~/.fzf', 'do': './install --bin' }
@@ -31,6 +31,7 @@ Plug 'arcticicestudio/nord-vim'
 
 " Git
 Plug 'airblade/vim-gitgutter'
+Plug 'zivyangll/git-blame.vim'
 
 " EditorConfig
 Plug 'editorconfig/editorconfig-vim'
@@ -39,7 +40,9 @@ Plug 'editorconfig/editorconfig-vim'
 Plug 'tpope/vim-fugitive'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-commentary'
-Plug 'ervandew/supertab'
+
+" GraphQL
+Plug 'jparise/vim-graphql'
 
 call plug#end()
 
@@ -47,7 +50,8 @@ set background=light
 set backspace=indent,eol,start
 set breakindent
 set clipboard+=unnamedplus,unnamed
-set completeopt+=menu
+set completeopt+=menuone,noselect
+set completeopt-=preview
 set expandtab
 set foldcolumn=2
 set history=1000
@@ -60,6 +64,7 @@ set noswapfile
 set ruler
 set scrolloff=3
 set shiftwidth=2
+set shortmess+=c
 set smartcase
 set softtabstop=2
 set splitright
@@ -89,7 +94,7 @@ let g:LanguageClient_selectionUI = 'fzf'
 let g:LanguageClient_serverCommands = {
   \ 'javascript': ['flow-language-server', '--stdio'],
   \ 'javascript.jsx': ['flow-language-server', '--stdio'],
-  \ 'typescript': ['javascript-typescript-stdio'],
+  \ 'typescript': ['node_modules/.bin/javascript-typescript-stdio'],
   \ }
 
 " ESLint ---------------------------------------------------------------------------------
@@ -126,13 +131,9 @@ endif
 
 if (prettier_is_active)
   let g:ale_javascript_prettier_executable = g:prettier_path
-  let g:ale_javascript_prettier_options = '--single-quote --print-width 100 --no-bracket-spacing false --use-tabs true'
+  let g:ale_javascript_prettier_options = '--single-quote --print-width 120 --no-bracket-spacing false'
   let g:ale_fixers.javascript = g:ale_fixers.javascript + ['prettier']
 endif
-
-" SuperTab -------------------------------------------------------------------------------
-
-let g:SuperTabDefaultCompletionType = '<C-n>'
 
 " UltiSnips ------------------------------------------------------------------------------
 
@@ -180,6 +181,11 @@ function Save()
   :w
 endfunction
 
+" MuComplete -----------------------------------------------------------------------------
+
+let g:mucomplete#enable_auto_at_startup = 1
+let g:mucomplete#buffer_relative_paths = 1
+
 " Mapping --------------------------------------------------------------------------------
 
 let mapleader = ' '
@@ -187,7 +193,7 @@ let mapleader = ' '
 nnoremap <leader>s :call Save()<CR>
 nnoremap <silent> <leader>n :Explore<CR>
 
-nnoremap <leader>g :Ag
+nnoremap <leader>g :Ag 
 nnoremap <silent> <leader>f :GFiles<CR>
 nnoremap <silent> <leader>b :Buffers<CR>
 nnoremap <silent> <leader>h :History<CR>
@@ -203,3 +209,19 @@ nnoremap <silent> <leader>l :call ToggleLocList()<CR>
 
 nnoremap <silent> [[ :call PrevListItem()<CR>
 nnoremap <silent> ]] :call NextListItem()<CR>
+
+nnoremap <leader>tn :tabnew<CR>
+nnoremap <leader>to :tabonly<CR>
+nnoremap <leader>tc :tabclose<CR>
+nnoremap <leader>tm :tabmove<CR>
+nnoremap <leader>t :tabnext<CR>
+nnoremap <leader>1 1gt<CR>
+nnoremap <leader>2 2gt<CR>
+nnoremap <leader>3 3gt<CR>
+nnoremap <leader>4 4gt<CR>
+nnoremap <leader>5 5gt<CR>
+nnoremap <leader>6 6gt<CR>
+nnoremap <leader>7 7gt<CR>
+nnoremap <leader>8 8gt<CR>
+nnoremap <leader>9 9gt<CR>
+nnoremap <leader>0 :tablast<CR>
