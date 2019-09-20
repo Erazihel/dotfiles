@@ -44,5 +44,29 @@ ln -f -s $(pwd)/nvim/init.vim ~/.config/nvim/init.vim
 nvim +PlugInstall +qa
 echo Done!
 
+echo Installing Autojump..
+git clone git://github.com/wting/autojump.git
+cd autojump
+./install.py
+cd ..
+rm -rf autojump
+echo Done!
+
+echo Installing fonts..
+git clone https://github.com/powerline/fonts.git --depth=1
+cd fonts
+./install.sh
+cd ..
+rm -rf fonts
+echo Done!
+
+echo Installing Node, NPM and Yarn..
+brew install yarn
+echo Done!
+
+echo Installing NVM..
+brew install nvm
+echo Done!
+
 echo Install successful 👌
 echo Relaunch your terminal for the modifications to take effect

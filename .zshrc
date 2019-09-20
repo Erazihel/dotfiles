@@ -35,3 +35,4 @@ function gdc() {
 
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
 [ -f /usr/local/etc/profile.d/autojump.sh ]
+autoload -U compinit && compinit -u
