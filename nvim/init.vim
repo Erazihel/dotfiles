@@ -44,6 +44,8 @@ Plug 'tpope/vim-commentary'
 " GraphQL
 Plug 'jparise/vim-graphql'
 
+autocmd FileType typescript setlocal formatprg=prettier\ --parser\ typescript
+
 call plug#end()
 
 set background=light
@@ -72,6 +74,11 @@ set tabstop=2
 set termguicolors
 set ttimeoutlen=50
 set t_Co=256
+
+augroup SyntaxSettings
+    autocmd!
+    autocmd BufNewFile,BufRead *.tsx set filetype=typescript
+augroup END
 
 " Theme ---------------------------------------------------------------------------------
 
@@ -121,8 +128,8 @@ let g:ale_lint_on_enter = 0
 let g:ale_lint_on_text_changed = 'never'
 let g:ale_linter_aliases = {'javascript.jsx': 'javascript'}
 let g:ale_fixers_aliases = {'javascript.jsx': 'javascript'}
-let g:ale_linters = {'javascript': []}
-let g:ale_fixers = {'javascript': []}
+let g:ale_linters = {'javascript': [], 'typescript': ['tsserver', 'tslint']}
+let g:ale_fixers = {'javascript': [], 'typescript': ['prettier']}
 
 if (eslint_is_active)
   let g:ale_javascript_eslint_executable = g:eslint_path
@@ -131,7 +138,7 @@ endif
 
 if (prettier_is_active)
   let g:ale_javascript_prettier_executable = g:prettier_path
-  let g:ale_javascript_prettier_options = '--single-quote --print-width 120 --no-bracket-spacing false'
+  " let g:ale_javascript_prettier_options = '--single-quote --print-width 120 --no-bracket-spacing false'
   let g:ale_fixers.javascript = g:ale_fixers.javascript + ['prettier']
 endif
 
