@@ -4,8 +4,15 @@ echo Install in progress..
 
 echo Installing Brew
 /usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+echo Done!
 
+echo Installing wget
 brew install wget
+echo Done!
+
+echo Installing Rg
+brew install ripgrep
+echo Done!
 
 echo Installing OhMyZsh
 sh -c "$(wget https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh -O -)"
