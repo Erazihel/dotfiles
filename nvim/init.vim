@@ -14,6 +14,13 @@ Plug 'junegunn/fzf.vim'
 
 " Utilities
 Plug 'mattn/emmet-vim'
+Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-surround'
+
+" Git
+Plug 'airblade/vim-gitgutter'
+Plug 'zivyangll/git-blame.vim'
 
 " Theme and syntax
 Plug 'arcticicestudio/nord-vim'
@@ -54,6 +61,7 @@ set nowritebackup
 set number
 set relativenumber
 set ruler
+set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 set scrolloff=3
 set shiftwidth=2
 set shortmess+=ctT
@@ -143,7 +151,7 @@ nnoremap  <leader>h :History<cr>
 nnoremap  <leader>b :Buffers<cr>
 nnoremap  <leader>w :bd<cr>
 nnoremap  <leader>s :w<cr>
-nmap      <leader>P :Prettier<cr>
+nnoremap  <leader>P :Prettier<cr>
 
 vnoremap  .     :normal .<cr>
 
