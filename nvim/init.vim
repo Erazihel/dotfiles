@@ -19,19 +19,22 @@ Plug 'tpope/vim-repeat'
 Plug 'tpope/vim-surround'
 
 " Git
-Plug 'airblade/vim-gitgutter'
+" Plug 'airblade/vim-gitgutter'
 Plug 'zivyangll/git-blame.vim'
 
 " Theme and syntax
 Plug 'arcticicestudio/nord-vim'
 
-Plug 'elzr/vim-json'          , {'for': 'json'}
-Plug 'othree/html5.vim'       , {'for': 'html'}
-Plug 'hail2u/vim-css3-syntax' , {'for': 'css'}
-Plug 'plasticboy/vim-markdown', {'for': 'markdown'}
-Plug 'pangloss/vim-javascript', {'for': ['javascript', 'javascript.jsx']}
-Plug 'mxw/vim-jsx'            , {'for': ['javascript', 'javascript.jsx']}
-Plug 'soywod/typescript.vim'  , {'for': ['typescript', 'typescript.jsx']}
+" Plug 'elzr/vim-json'               , {'for': 'json'}
+" Plug 'othree/html5.vim'            , {'for': 'html'}
+" Plug 'hail2u/vim-css3-syntax'      , {'for': 'css'}
+" Plug 'plasticboy/vim-markdown'     , {'for': 'markdown'}
+" Plug 'pangloss/vim-javascript', {'for': ['javascript', 'javascript.jsx']}
+" Plug 'mxw/vim-jsx'            , {'for': ['javascript', 'javascript.jsx']}
+" Plug 'soywod/typescript.vim'  , {'for': ['typescript', 'typescript.jsx']}
+" Plug 'yuezk/vim-js'                , {'for': 'javascript'}
+" Plug 'HerringtonDarkholme/yats.vim', {'for': ['typescript', 'typescript.jsx']}
+" Plug 'maxmellon/vim-jsx-pretty'    , {'for': ['javascript.jsx', 'typescript', 'typescript.tsx']}
 
 call plug#end()
 
@@ -79,6 +82,13 @@ set updatetime=300
 set viewoptions=cursor,folds,slash,unix
 set wildmenu
 
+" --------------------------------------------------------------- # FZF #
+" Anchor layout to the bottom of the screen
+let g:fzf_layout = { 'window': { 'width': 1, 'height': 0.8, 'relative': v:true, 'yoffset': 1.0 } }
+
+" Preview window on the upper side of the window with 40% height,
+" ctrl-/ to toggle
+let g:fzf_preview_window = ['up:60%', 'ctrl-/']
 " ---------------------------------------------------------------- # Theme #
 colorscheme nord
 
@@ -101,26 +111,13 @@ function! s:show_documentation()
   endif
 endfunction
 
-function! s:grep(args, bang)
-  let args = [
-    \'--column',
-    \'--line-number',
-    \'--no-heading',
-    \'--fixed-strings',
-    \'--ignore-case',
-    \'--hidden',
-    \'--follow',
-    \'--color "always"',
-    \'--glob "!.git/*"',
-    \shellescape(a:args),
-  \]
-
-  call fzf#vim#grep(printf('rg %s', join(args, ' ')), 1, a:bang)
-endfunction
-
 " ----------------------------------------------------------------- # Commands #
 
-command! -bang -nargs=* Grep call s:grep(<q-args>, <bang>0)
+command! -bang -nargs=* Grep
+  \ call fzf#vim#grep(
+  \   'rg --column --line-number --no-heading --color=always --smart-case -- '.shellescape(<q-args>), 1,
+  \   fzf#vim#with_preview(), <bang>0)
+
 command! -nargs=0 Prettier :CocCommand prettier.formatFile
 
 augroup dotfiles
