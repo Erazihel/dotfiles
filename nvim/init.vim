@@ -36,6 +36,14 @@ Plug 'arcticicestudio/nord-vim'
 " Plug 'HerringtonDarkholme/yats.vim', {'for': ['typescript', 'typescript.jsx']}
 " Plug 'maxmellon/vim-jsx-pretty'    , {'for': ['javascript.jsx', 'typescript', 'typescript.tsx']}
 
+Plug 'neoclide/coc-eslint', {'do': 'yarn install --frozen-lockfile'}
+Plug 'neoclide/coc-git', {'do': 'yarn install --frozen-lockfile'}
+Plug 'neoclide/coc-html', {'do': 'yarn install --frozen-lockfile'}
+Plug 'neoclide/coc-prettier', {'do': 'yarn install --frozen-lockfile'}
+Plug 'neoclide/coc-tsserver', {'do': 'yarn install --frozen-lockfile'}
+Plug 'josa42/coc-sh', {'do': 'yarn install --frozen-lockfile'}
+Plug 'iamcco/coc-spell-checker', {'do': 'yarn install --frozen-lockfile'}
+
 call plug#end()
 
 " ---------------------------------------------------------------- # Settings #
