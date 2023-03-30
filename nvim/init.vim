@@ -98,6 +98,7 @@ set viewoptions=cursor,folds,slash,unix
 set wildmenu
 
 " ---------------------------------------------------------------- # FZF #
+
 " Anchor layout to the bottom of the screen
 let g:fzf_layout = { 'window': { 'width': 1, 'height': 0.8, 'relative': v:true, 'yoffset': 1.0 } }
 
@@ -106,15 +107,18 @@ let g:fzf_layout = { 'window': { 'width': 1, 'height': 0.8, 'relative': v:true, 
 let g:fzf_preview_window = ['up:60%', 'ctrl-/']
 
 " ---------------------------------------------------------------- # Registers Plugin #
+
 let g:peekup_open = '<leader>r'
 
 " ---------------------------------------------------------------- # Floaterm Plugin#
+
 let g:floaterm_title = ''
 let g:floaterm_keymap_toggle = '<leader>\'
 let g:floaterm_height = 0.8
 let g:floaterm_width = 0.8
 
 " ---------------------------------------------------------------- # Lua Plugins #
+
 lua require('Comment').setup()
 
 lua sections_config = {
@@ -123,7 +127,7 @@ lua sections_config = {
 \   lualine_c = { { 'filename', path = 1 } },
 \   lualine_x = { { 'filetype', colored = false } },
 \   lualine_y = {'location'},
-\   lualine_z = {'%p%%/%L'}
+\   lualine_z = {'%{GetProgress()}'}
 \ }
 
 lua winbar_config = {
@@ -141,6 +145,23 @@ lua require('lualine').setup({
 \   sections = sections_config,
 \   winbar = winbar_config
 \ })
+
+" ---------------------------------------------------------------- # Functions #
+
+function! GetProgress()
+  let current_line = line('.')
+  let total_lines = line('$')
+  let progress = total_lines > 0 ? (current_line * 100 / total_lines) : 0
+  let position = current_line == 1 ? "Top" : (current_line == total_lines ? "Bot" : "")
+
+  if position != ""
+    return position . "/" . total_lines
+  endif
+
+  let padded_progress = repeat(' ', 2 - len(string(progress))) . progress
+
+  return padded_progress . "%/" . total_lines
+endfunction
 
 " ---------------------------------------------------------------- # Theme #
 
@@ -192,3 +213,7 @@ nnoremap  <leader>\   :FloatermToggle --cwd=<root><cr>
 nnoremap  <leader>gd  :Git diff<cr>
 
 vnoremap  .     :normal .<cr>
+
+" Tab navigation on autocompletion
+inoremap <expr> <Tab> coc#pum#visible() ? coc#pum#next(1) : "\<Tab>"
+inoremap <expr> <S-Tab> coc#pum#visible() ? coc#pum#prev(1) : "\<S-Tab>"
