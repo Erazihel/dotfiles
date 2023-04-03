@@ -3,24 +3,8 @@ filetype plugin indent on
 
 call plug#begin()
 
-" Completion
+" Coc
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
-Plug 'neoclide/coc-neco', {'for': 'vim'}
-Plug 'shougo/neco-vim'  , {'for': 'vim'}
-
-" Fuzzy Finder
-Plug 'junegunn/fzf'     , {'dir': '~/.fzf', 'do': './install --all'}
-Plug 'junegunn/fzf.vim'
-
-" Utilities
-Plug 'mattn/emmet-vim'
-" Plug 'tpope/vim-commentary'
-" Plug 'tpope/vim-repeat'
-" Plug 'tpope/vim-surround'
-Plug 'numToStr/Comment.nvim'
-
-" Registers
-Plug 'gennaro-tedesco/nvim-peekup'
 
 " Terminal
 Plug 'voldikss/vim-floaterm'
@@ -33,6 +17,8 @@ Plug 'nvim-lua/plenary.nvim'
 
 " Theme and syntax
 Plug 'arcticicestudio/nord-vim'
+
+Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 
 " Icons
 Plug 'nvim-tree/nvim-web-devicons'
@@ -49,8 +35,9 @@ Plug 'iamcco/coc-spell-checker', {'do': 'yarn install --frozen-lockfile'}
 " Line
 Plug 'nvim-lualine/lualine.nvim'
 
-" Testing
+" Telescope
 Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.1' }
+Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
 
 call plug#end()
 
@@ -79,7 +66,6 @@ set noshowmode
 set noswapfile
 set nowritebackup
 set number
-set relativenumber
 set ruler
 set scrolloff=3
 set shiftwidth=2
@@ -97,20 +83,18 @@ set updatetime=300
 set viewoptions=cursor,folds,slash,unix
 set wildmenu
 
-" ---------------------------------------------------------------- # FZF #
+" ---------------------------------------------------------------- # Theme #
 
-" Anchor layout to the bottom of the screen
-let g:fzf_layout = { 'window': { 'width': 1, 'height': 0.8, 'relative': v:true, 'yoffset': 1.0 } }
+colorscheme nord
 
-" Preview window on the upper side of the window with 40% height,
-" ctrl-/ to toggle
-let g:fzf_preview_window = ['up:60%', 'ctrl-/']
+highlight link  TelescopeMatching       NvimString
+" highlight link  TelescopePreviewTitle Search
+" highlight link  TelescopeResultsTitle Search
+" highlight link  TelescopePromptTitle  Search
 
-" ---------------------------------------------------------------- # Registers Plugin #
+highlight DevIconTsx  guifg=#61dbfb
 
-let g:peekup_open = '<leader>r'
-
-" ---------------------------------------------------------------- # Floaterm Plugin#
+" ---------------------------------------------------------------- # Floaterm Plugin #
 
 let g:floaterm_title = ''
 let g:floaterm_keymap_toggle = '<leader>\'
@@ -119,32 +103,134 @@ let g:floaterm_width = 0.8
 
 " ---------------------------------------------------------------- # Lua Plugins #
 
-lua require('Comment').setup()
+lua <<EOF
+function breadcrumbs()
+  local items = vim.b.coc_nav
 
-lua sections_config = {
-\   lualine_a = { { 'mode', fmt = function(res) return '◎' end } },
-\   lualine_b = {'branch', { 'diff', symbols = { added = '󰜄 ', modified = '󱔀 ', removed = '󰛲 ' } }, 'diagnostics'},
-\   lualine_c = { { 'filename', path = 1 } },
-\   lualine_x = { { 'filetype', colored = false } },
-\   lualine_y = {'location'},
-\   lualine_z = {'%{GetProgress()}'}
-\ }
+  local t = {''}
 
-lua winbar_config = {
-\   lualine_a = {},
-\   lualine_b = { { 'filetype', colored = false, icon_only = true, separator = '' }, 'filename' },
-\   lualine_c = {},
-\   lualine_x = {},
-\   lualine_y = {},
-\   lualine_z = {}
-\ }
+  local highlight_icon_mapping = {
+    CocSymbolFunction = '󰊕',
+    CocSymbolProperty = '',
+    CocSymbolVariable = ''
+  }
 
-lua require('lualine').setup({
-\   inactive_sections = sections_config,
-\   inactive_winbar = winbar_config,
-\   sections = sections_config,
-\   winbar = winbar_config
-\ })
+  local highlight_icon_color_mapping = {
+    CocSymbolFunction = 'CocListFgYellow',
+    CocSymbolProperty = 'CocListFgCyan',
+    CocSymbolVariable = 'CocListFgMagenta'
+  }
+
+
+  for k, v in ipairs(items) do
+    setmetatable(v, {
+      __index = function(table, key)
+        return ' '
+      end
+    })
+
+    local icon = highlight_icon_mapping[v.highlight] or v.highlight or ''
+
+    local icon_color = highlight_icon_color_mapping[v.highlight] or ''
+
+    t[#t+1] = '%#' .. icon_color .. '#' .. icon .. ' %#Normal#' .. v.name
+
+    if next(items,k) ~= nil then
+      t[#t+1] = '%#CocListFgCyan# > '
+    end
+  end
+
+  return table.concat(t)
+end
+
+local sections_config = {
+  lualine_a = {{'mode', fmt = function(res) return '◎' end}},
+  lualine_b = {'branch', {'diff', symbols = {added = '󰜄 ', modified = '󱔀 ', removed = '󰛲 '}}, 'diagnostics'},
+  lualine_c = {{'filename', path = 1}},
+  lualine_x = {{'filetype'}},
+  lualine_y = {'location'},
+  lualine_z = {'%{GetProgress()}'}
+}
+
+local winbar_config = {
+  lualine_a = {},
+  lualine_b = {{'filetype', icon_only = true, separator = ''}, 'filename'},
+  lualine_c = {breadcrumbs},
+  lualine_x = {},
+  lualine_y = {},
+  lualine_z = {}
+}
+
+require('lualine').setup({
+  inactive_sections = sections_config,
+  inactive_winbar = winbar_config,
+  sections = sections_config,
+  winbar = winbar_config
+})
+EOF
+
+" ---------------------------------------------------------------- # Telescope #
+
+lua <<EOF
+local actions = require("telescope.actions")
+
+require('telescope').setup({
+  defaults = {
+    layout_config = {vertical = {width = 0.9, height = 0.9, preview_height = 0.6, preview_cutoff = 0}},
+    layout_strategy = "vertical",
+    mappings = {
+      i = {
+        ["<esc>"] = actions.close
+      },
+    },
+    vimgrep_arguments = {
+      "rg",
+      "--color=auto",
+      "--column",
+      "--hidden",
+      "--line-number",
+      "--no-heading",
+      "--smart-case"
+    },
+  },
+  pickers = {
+    find_files = {
+      find_command = {"rg", "--files", "--hidden", "--glob", "!**/.git/*"},
+   }
+  },
+})
+
+require('telescope').load_extension('fzf')
+EOF
+
+" ---------------------------------------------------------------- # Treesiter #
+
+lua <<EOF
+require('nvim-treesitter.configs').setup({
+  auto_install = true,
+  ensure_installed = {
+    "bash",
+    "css",
+    "dockerfile",
+    "gitignore",
+    "graphql",
+    "html",
+    "javascript",
+    "json",
+    "lua",
+    "luadoc",
+    "regex",
+    "scss",
+    "tsx",
+    "typescript",
+    "vim",
+    "yaml"
+  },
+  highlight = {
+    enable = true,
+  }
+})
+EOF
 
 " ---------------------------------------------------------------- # Functions #
 
@@ -155,42 +241,21 @@ function! GetProgress()
   let position = current_line == 1 ? "Top" : (current_line == total_lines ? "Bot" : "")
 
   if position != ""
-    return position . "/" . total_lines
+    return position .. "/" .. total_lines
   endif
 
   let padded_progress = repeat(' ', 2 - len(string(progress))) . progress
 
-  return padded_progress . "%/" . total_lines
+  return padded_progress .. "%/" .. total_lines
 endfunction
 
-" ---------------------------------------------------------------- # Theme #
-
-colorscheme nord
-
-highlight Error               guibg=#BF616A guifg=#D8DEE9 gui=NONE
-highlight ErrorMsg            guibg=NONE    guifg=#BF616A gui=Bold
-highlight CocErrorHighlight   guibg=NONE    guifg=#BF616A gui=Underline
-highlight CocErrorSign        guibg=NONE    guifg=#BF616A gui=None
-highlight Warning             guibg=#EBCB8B guifg=#D8DEE9 gui=NONE
-highlight WarningMsg          guibg=NONE    guifg=#EBCB8B gui=Bold
-highlight CocWarningHighlight guibg=NONE    guifg=#EBCB8B gui=Underline
-highlight CocWarningSign      guibg=NONE    guifg=#EBCB8B gui=NONE
-
 " ----------------------------------------------------------------- # Commands #
-
-command! -bang -nargs=* Grep
-  \ call fzf#vim#grep(
-  \   'rg --column --line-number --no-heading --color=always --smart-case -- '.shellescape(<q-args>), 1,
-  \   fzf#vim#with_preview(), <bang>0)
-
-command! -nargs=0 Prettier :CocCommand prettier.formatFile
 
 augroup dotfiles
   autocmd!
   autocmd CursorHold  *   silent call CocActionAsync('highlight')
   autocmd FileType    *   setlocal fo-=c fo-=r fo-=o
   autocmd FileType    qf  wincmd J
-  autocmd FileType    html,css,scss,less,javascript*,typescript*  EmmetInstall
   autocmd VimEnter    * if exists(':FloatermNew') | execute "FloatermNew --cwd=<root>" | execute "FloatermHide" | stopinsert | endif
 augroup end
 
@@ -199,18 +264,25 @@ augroup end
 let mapleader = ' '
 
 nnoremap  <leader>n   :Explore<cr>
+
 nnoremap  <leader>d   <plug>(coc-definition)
 nnoremap  <leader>R   <plug>(coc-rename)
-nnoremap  <leader>a   <Plug>(coc-codeaction)
-nnoremap  <leader>f   :GFiles<cr>
-nnoremap  <leader>g   :Grep 
-nnoremap  <leader>h   :History<cr>
-nnoremap  <leader>b   :Buffers<cr>
-nnoremap  <leader>w   :bd<cr>
+nnoremap  <leader>a   <plug>(coc-codeaction)
+nnoremap  <leader>P   <plug>(coc-format)
+nnoremap  <leader>b   <cmd>lua require('telescope.builtin').buffers()<cr>
+nnoremap  <leader>f   <cmd>lua require('telescope.builtin').find_files()<cr>
+nnoremap  <leader>g   <cmd>lua require('telescope.builtin').live_grep()<cr>
+nnoremap  <leader>h   <cmd>lua require('telescope.builtin').oldfiles()<cr>
+nnoremap  <leader>k   <cmd>lua require('telescope.builtin').keymaps()<cr>
+nnoremap  <leader>r   <cmd>lua require('telescope.builtin').registers()<cr>
+
 nnoremap  <leader>s   :w<cr>
-nnoremap  <leader>P   :Prettier<cr>
+nnoremap  <leader>w   :bd<cr>
+
 nnoremap  <leader>\   :FloatermToggle --cwd=<root><cr>
-nnoremap  <leader>gd  :Git diff<cr>
+
+nnoremap  <leader>Gd  :Git diff<cr>
+nnoremap  <leader>Gb  :Git blame<cr>
 
 vnoremap  .     :normal .<cr>
 
