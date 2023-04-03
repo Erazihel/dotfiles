@@ -7,12 +7,13 @@ ZSH_THEME="bullet-train"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git docker-compose zsh-autosuggestions autojump brew gitfast npm zsh-syntax-highlighting you-should-use)
+plugins=(git docker-compose zsh-autosuggestions autojump brew gitfast npm zsh-syntax-highlighting you-should-use nx-completion)
 
 source $ZSH/oh-my-zsh.sh
 
 export LC_ALL=en_US.UTF-8
 export LANG=en_US.UTF-8
+export TERM=xterm-256color
 
 # NVM
 export NVM_DIR="$HOME/.nvm"
