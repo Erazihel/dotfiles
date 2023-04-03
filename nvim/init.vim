@@ -6,8 +6,9 @@ call plug#begin()
 " Coc
 Plug 'neoclide/coc.nvim', {'branch': 'release'}
 
-" Terminal
-Plug 'voldikss/vim-floaterm'
+" Fzf
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
 
 " Git
 Plug 'tpope/vim-fugitive'
@@ -16,7 +17,8 @@ Plug 'tpope/vim-fugitive'
 Plug 'nvim-lua/plenary.nvim'
 
 " Theme and syntax
-Plug 'arcticicestudio/nord-vim'
+Plug 'rmehri01/onenord.nvim', { 'branch': 'main' }
+" Plug 'arcticicestudio/nord-vim'
 
 Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 
@@ -85,7 +87,7 @@ set wildmenu
 
 " ---------------------------------------------------------------- # Theme #
 
-colorscheme nord
+colorscheme onenord
 
 highlight link  TelescopeMatching       NvimString
 " highlight link  TelescopePreviewTitle Search
@@ -94,16 +96,18 @@ highlight link  TelescopeMatching       NvimString
 
 highlight DevIconTsx  guifg=#61dbfb
 
-" ---------------------------------------------------------------- # Floaterm Plugin #
+" --------------------------------------------------------------- # FZF #
+" Anchor layout to the bottom of the screen
+let g:fzf_layout = { 'window': { 'width': 1, 'height': 0.8, 'relative': v:true, 'yoffset': 1.0 } }
 
-let g:floaterm_title = ''
-let g:floaterm_keymap_toggle = '<leader>\'
-let g:floaterm_height = 0.8
-let g:floaterm_width = 0.8
+" Preview window on the upper side of the window with 40% height,
+" ctrl-/ to toggle
+let g:fzf_preview_window = ['up:60%', 'ctrl-/']
 
 " ---------------------------------------------------------------- # Lua Plugins #
 
 lua <<EOF
+
 function breadcrumbs()
   local items = vim.b.coc_nav
 
@@ -147,7 +151,7 @@ local sections_config = {
   lualine_a = {{'mode', fmt = function(res) return '◎' end}},
   lualine_b = {'branch', {'diff', symbols = {added = '󰜄 ', modified = '󱔀 ', removed = '󰛲 '}}, 'diagnostics'},
   lualine_c = {{'filename', path = 1}},
-  lualine_x = {{'filetype'}},
+  lualine_x = {},
   lualine_y = {'location'},
   lualine_z = {'%{GetProgress()}'}
 }
@@ -167,45 +171,33 @@ require('lualine').setup({
   sections = sections_config,
   winbar = winbar_config
 })
+
 EOF
 
 " ---------------------------------------------------------------- # Telescope #
 
 lua <<EOF
+
 local actions = require("telescope.actions")
 
 require('telescope').setup({
   defaults = {
-    layout_config = {vertical = {width = 0.9, height = 0.9, preview_height = 0.6, preview_cutoff = 0}},
+    layout_config = {vertical = {width = 0.9, height = 0.9, preview_height = 0.5, preview_cutoff = 0}},
     layout_strategy = "vertical",
     mappings = {
       i = {
         ["<esc>"] = actions.close
       },
     },
-    vimgrep_arguments = {
-      "rg",
-      "--color=auto",
-      "--column",
-      "--hidden",
-      "--line-number",
-      "--no-heading",
-      "--smart-case"
-    },
-  },
-  pickers = {
-    find_files = {
-      find_command = {"rg", "--files", "--hidden", "--glob", "!**/.git/*"},
-   }
   },
 })
 
-require('telescope').load_extension('fzf')
 EOF
 
 " ---------------------------------------------------------------- # Treesiter #
 
 lua <<EOF
+
 require('nvim-treesitter.configs').setup({
   auto_install = true,
   ensure_installed = {
@@ -230,6 +222,7 @@ require('nvim-treesitter.configs').setup({
     enable = true,
   }
 })
+
 EOF
 
 " ---------------------------------------------------------------- # Functions #
@@ -251,40 +244,43 @@ endfunction
 
 " ----------------------------------------------------------------- # Commands #
 
+command! -bang -nargs=* Grep
+  \ call fzf#vim#grep(
+  \   'rg --column --line-number --no-heading --color=always --hidden --smart-case -- '.shellescape(<q-args>), 1,
+  \   fzf#vim#with_preview(), <bang>0)
+
 augroup dotfiles
   autocmd!
   autocmd CursorHold  *   silent call CocActionAsync('highlight')
   autocmd FileType    *   setlocal fo-=c fo-=r fo-=o
   autocmd FileType    qf  wincmd J
-  autocmd VimEnter    * if exists(':FloatermNew') | execute "FloatermNew --cwd=<root>" | execute "FloatermHide" | stopinsert | endif
 augroup end
 
 " ----------------------------------------------------------------- # Mappings #
 
 let mapleader = ' '
 
+nnoremap  <leader>b   :Buffers<cr>
+nnoremap  <leader>f   :GFiles<cr>
+nnoremap  <leader>g   :Grep 
+nnoremap  <leader>h   :History<cr>
 nnoremap  <leader>n   :Explore<cr>
 
 nnoremap  <leader>d   <plug>(coc-definition)
 nnoremap  <leader>R   <plug>(coc-rename)
 nnoremap  <leader>a   <plug>(coc-codeaction)
 nnoremap  <leader>P   <plug>(coc-format)
-nnoremap  <leader>b   <cmd>lua require('telescope.builtin').buffers()<cr>
-nnoremap  <leader>f   <cmd>lua require('telescope.builtin').find_files()<cr>
-nnoremap  <leader>g   <cmd>lua require('telescope.builtin').live_grep()<cr>
-nnoremap  <leader>h   <cmd>lua require('telescope.builtin').oldfiles()<cr>
 nnoremap  <leader>k   <cmd>lua require('telescope.builtin').keymaps()<cr>
 nnoremap  <leader>r   <cmd>lua require('telescope.builtin').registers()<cr>
 
 nnoremap  <leader>s   :w<cr>
 nnoremap  <leader>w   :bd<cr>
 
-nnoremap  <leader>\   :FloatermToggle --cwd=<root><cr>
-
 nnoremap  <leader>Gd  :Git diff<cr>
 nnoremap  <leader>Gb  :Git blame<cr>
 
-vnoremap  .     :normal .<cr>
+vnoremap  .             :normal .<cr>
+vnoremap  <silent><c-s> :'<,'>sort<cr>
 
 " Tab navigation on autocompletion
 inoremap <expr> <Tab> coc#pum#visible() ? coc#pum#next(1) : "\<Tab>"

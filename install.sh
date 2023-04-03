@@ -46,7 +46,7 @@ if [ ! -f ~/.config/nvim/autoload/plug.vim ]; then
     https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 fi
 
-ln -f -s $(pwd)/nvim/init.vim ~/.config/nvim/init.vim
+ln -sf $(pwd)/nvim/init.vim ~/.config/nvim/init.vim
 
 nvim +PlugInstall +qa
 echo Done!
