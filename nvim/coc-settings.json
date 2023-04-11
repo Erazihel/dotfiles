@@ -1,6 +1,10 @@
 {
   "diagnostic.errorSign": "",
   "diagnostic.warningSign": "",
+  "diagnostic.infoSign": "",
+  "git.addedSign.hlGroup": "CocListBlackGreen",
+  "git.changedSign.hlGroup": "CocListBlackYellow",
+  "git.removedSign.hlGroup": "CocListBlackRed",
   "git.removedSign.text": "-",
   "suggest.noselect": true
 }

@@ -1,6 +1,8 @@
 syntax on
 filetype plugin indent on
 
+" ------- # Plugins # -------
+
 call plug#begin()
 
 " Coc
@@ -37,33 +39,28 @@ Plug 'iamcco/coc-spell-checker', {'do': 'yarn install --frozen-lockfile'}
 " Line
 Plug 'nvim-lualine/lualine.nvim'
 
-" Telescope
-Plug 'nvim-telescope/telescope.nvim', { 'tag': '0.1.1' }
-Plug 'nvim-telescope/telescope-fzf-native.nvim', { 'do': 'make' }
+
+" Symbols Outline
+Plug 'liuchengxu/vista.vim'
 
 call plug#end()
 
-" ---------------------------------------------------------------- # Settings #
+" ------- # Settings # -------
 
 set autoindent
-set hidden
-set autoindent
-set background=dark
 set backspace=indent,eol,start
 set breakindent
 set clipboard=unnamedplus
-set cmdheight=2
 set completeopt=noinsert,menuone,noselect
 set cursorline
 set expandtab
-set foldlevelstart=99
-set foldmethod=syntax
-set foldtext=getline(v:foldstart)
+set foldmethod=indent
 set hidden
 set history=1000
 set laststatus=2
 set linebreak
 set nobackup
+set nofoldenable
 set noshowmode
 set noswapfile
 set nowritebackup
@@ -82,21 +79,29 @@ set ttimeoutlen=50
 set undodir=~/.config/nvim/undo//
 set undofile
 set updatetime=300
-set viewoptions=cursor,folds,slash,unix
+set viewoptions=curdir,cursor,folds
 set wildmenu
 
-" ---------------------------------------------------------------- # Theme #
+" ------- # Coc Extensions # -------
 
-colorscheme onenord
+let g:coc_global_extensions = [
+\   'coc-eslint',
+\   'coc-git',
+\   'coc-html',
+\   'coc-json',
+\   'coc-nav',
+\   'coc-prettier',
+\   'coc-sh',
+\   'coc-spell-checker',
+\   'coc-tsserver',
+\ ]
 
-highlight link  TelescopeMatching       NvimString
-" highlight link  TelescopePreviewTitle Search
-" highlight link  TelescopeResultsTitle Search
-" highlight link  TelescopePromptTitle  Search
+" ------- # Theme # -------
 
 highlight DevIconTsx  guifg=#61dbfb
 
-" --------------------------------------------------------------- # FZF #
+" ------- # FZF # -------
+
 " Anchor layout to the bottom of the screen
 let g:fzf_layout = { 'window': { 'width': 1, 'height': 0.8, 'relative': v:true, 'yoffset': 1.0 } }
 
@@ -104,7 +109,37 @@ let g:fzf_layout = { 'window': { 'width': 1, 'height': 0.8, 'relative': v:true, 
 " ctrl-/ to toggle
 let g:fzf_preview_window = ['up:60%', 'ctrl-/']
 
-" ---------------------------------------------------------------- # Lua Plugins #
+" ------- # Vista # -------
+
+let g:vista_default_executive = 'coc'
+
+let g:vista_fzf_preview = ['right:50%']
+
+" -------- # Custom Color Scheme # -------
+
+lua <<EOF
+
+local colors = require("onenord.colors").load()
+
+require("onenord").setup({
+  custom_highlights = {
+    ["Special"] = { fg = colors.cyan },
+    -- ["TSInclude"] = { fg = colors.yellow },
+    ["Function"] = { fg = colors.yellow },
+  },
+  custom_colors = {
+    diff_add_bg = '#689940',
+    diff_change_bg = '#d9a821',
+    diff_remove_bg = colors.red,
+    diff_change = colors.yellow,
+    info = colors.blue,
+    warn = colors.yellow,
+  },
+})
+
+EOF
+
+" -------- # LuaLine # -------
 
 lua <<EOF
 
@@ -114,17 +149,26 @@ function breadcrumbs()
   local t = {''}
 
   local highlight_icon_mapping = {
-    CocSymbolFunction = '󰊕',
-    CocSymbolProperty = '',
-    CocSymbolVariable = ''
+    CocSymbolArray      = '',
+    CocSymbolEnum       = '',
+    CocSymbolFunction   = '󰊕',
+    CocSymbolInterface  = '',
+    CocSymbolModule     = '',
+    CocSymbolProperty   = '',
+    CocSymbolString     = '',
+    CocSymbolVariable   = ''
   }
 
   local highlight_icon_color_mapping = {
-    CocSymbolFunction = 'CocListFgYellow',
-    CocSymbolProperty = 'CocListFgCyan',
-    CocSymbolVariable = 'CocListFgMagenta'
+    CocSymbolArray      = 'CocListFgBlue',
+    CocSymbolEnum       = 'CocListFgCyan',
+    CocSymbolFunction   = 'CocListFgYellow',
+    CocSymbolInterface  = 'CocListFgYellow',
+    CocSymbolModule     = 'CocListFgYellow',
+    CocSymbolProperty   = 'CocListFgCyan',
+    CocSymbolString     = 'CocListFgGreen',
+    CocSymbolVariable   = 'CocListFgMagenta'
   }
-
 
   for k, v in ipairs(items) do
     setmetatable(v, {
@@ -137,7 +181,7 @@ function breadcrumbs()
 
     local icon_color = highlight_icon_color_mapping[v.highlight] or ''
 
-    t[#t+1] = '%#' .. icon_color .. '#' .. icon .. ' %#Normal#' .. v.name
+    t[#t+1] = '%#' .. icon_color .. '#' .. icon .. ' %#' .. v.highlight .. '#' .. v.name 
 
     if next(items,k) ~= nil then
       t[#t+1] = '%#CocListFgCyan# > '
@@ -149,7 +193,10 @@ end
 
 local sections_config = {
   lualine_a = {{'mode', fmt = function(res) return '◎' end}},
-  lualine_b = {'branch', {'diff', symbols = {added = '󰜄 ', modified = '󱔀 ', removed = '󰛲 '}}, 'diagnostics'},
+  lualine_b = {
+    { 'diff', symbols = {added = '󰜄 ', modified = '󱔀 ', removed = '󰛲 '} },
+    'diagnostics',
+  },
   lualine_c = {{'filename', path = 1}},
   lualine_x = {},
   lualine_y = {'location'},
@@ -174,27 +221,7 @@ require('lualine').setup({
 
 EOF
 
-" ---------------------------------------------------------------- # Telescope #
-
-lua <<EOF
-
-local actions = require("telescope.actions")
-
-require('telescope').setup({
-  defaults = {
-    layout_config = {vertical = {width = 0.9, height = 0.9, preview_height = 0.5, preview_cutoff = 0}},
-    layout_strategy = "vertical",
-    mappings = {
-      i = {
-        ["<esc>"] = actions.close
-      },
-    },
-  },
-})
-
-EOF
-
-" ---------------------------------------------------------------- # Treesiter #
+" -------- # Treesiter # -------
 
 lua <<EOF
 
@@ -225,7 +252,7 @@ require('nvim-treesitter.configs').setup({
 
 EOF
 
-" ---------------------------------------------------------------- # Functions #
+" -------- # Functions # -------
 
 function! GetProgress()
   let current_line = line('.')
@@ -242,7 +269,7 @@ function! GetProgress()
   return padded_progress .. "%/" .. total_lines
 endfunction
 
-" ----------------------------------------------------------------- # Commands #
+" --------- # Commands # -------
 
 command! -bang -nargs=* Grep
   \ call fzf#vim#grep(
@@ -256,7 +283,7 @@ augroup dotfiles
   autocmd FileType    qf  wincmd J
 augroup end
 
-" ----------------------------------------------------------------- # Mappings #
+" --------- # Mappings # -------
 
 let mapleader = ' '
 
@@ -264,20 +291,31 @@ nnoremap  <leader>b   :Buffers<cr>
 nnoremap  <leader>f   :GFiles<cr>
 nnoremap  <leader>g   :Grep 
 nnoremap  <leader>h   :History<cr>
+nnoremap  <leader>k   :map<cr>
 nnoremap  <leader>n   :Explore<cr>
+nnoremap  <leader>o   :Vista!!<cr>
+nnoremap  <leader>r   :registers<cr>
+nnoremap  <leader>s   :w<cr>
+nnoremap  <leader>w   :bd<cr>
+nnoremap  <c-j>       :bprev<cr>
+nnoremap  <c-k>       :bnext<cr>
 
+nnoremap  <leader>D   :CocDiagnostics<cr>
 nnoremap  <leader>d   <plug>(coc-definition)
 nnoremap  <leader>R   <plug>(coc-rename)
 nnoremap  <leader>a   <plug>(coc-codeaction)
 nnoremap  <leader>P   <plug>(coc-format)
-nnoremap  <leader>k   <cmd>lua require('telescope.builtin').keymaps()<cr>
-nnoremap  <leader>r   <cmd>lua require('telescope.builtin').registers()<cr>
-
-nnoremap  <leader>s   :w<cr>
-nnoremap  <leader>w   :bd<cr>
+nnoremap  <c-p>       <plug>(coc-diagnostic-prev)
+nnoremap  <c-n>       <plug>(coc-diagnostic-next)
 
 nnoremap  <leader>Gd  :Git diff<cr>
 nnoremap  <leader>Gb  :Git blame<cr>
+nnoremap  <leader>Gm  :Git mergetool<cr>
+nnoremap  <leader>Gkb <plug>(coc-git-keepboth)
+nnoremap  <leader>Gkc <plug>(coc-git-keepcurrent)
+nnoremap  <leader>Gki <plug>(coc-git-keepincoming)
+nnoremap  <leader>Gn  <plug>(coc-git-nextconflict)
+nnoremap  <leader>Gp  <plug>(coc-git-prevconflict)
 
 vnoremap  .             :normal .<cr>
 vnoremap  <silent><c-s> :'<,'>sort<cr>
