@@ -150,9 +150,12 @@ function breadcrumbs()
 
   local highlight_icon_mapping = {
     CocSymbolArray      = '',
+    CocSymbolClass      = '',
     CocSymbolEnum       = '',
+    CocSymbolField      = '',
     CocSymbolFunction   = '󰊕',
     CocSymbolInterface  = '',
+    CocSymbolMethod     = '',
     CocSymbolModule     = '',
     CocSymbolProperty   = '',
     CocSymbolString     = '',
@@ -161,11 +164,14 @@ function breadcrumbs()
 
   local highlight_icon_color_mapping = {
     CocSymbolArray      = 'CocListFgBlue',
+    CocSymbolClass      = 'CocListFgRed',
     CocSymbolEnum       = 'CocListFgCyan',
+    CocSymbolField      = 'CocListFgYellow',
     CocSymbolFunction   = 'CocListFgYellow',
     CocSymbolInterface  = 'CocListFgYellow',
+    CocSymbolMethod     = 'CocListFgYellow',
     CocSymbolModule     = 'CocListFgYellow',
-    CocSymbolProperty   = 'CocListFgCyan',
+    CocSymbolProperty   = 'CocListFgYellow',
     CocSymbolString     = 'CocListFgGreen',
     CocSymbolVariable   = 'CocListFgMagenta'
   }
