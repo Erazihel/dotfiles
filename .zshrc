@@ -24,7 +24,7 @@ source ~/.externalzshrc
 
 # User configuration
 alias zshconfig="nvim ~/.zshrc"
-alias gbdr="git fetch -p; git branch -vv | grep ': gone]' | awk '{print $1}' | xargs git branch -D"
+alias gbdr="git fetch -p; git branch -vv | awk '/: gone]/{print $1}' | xargs git branch -D"
 alias glog="git rev-parse --abbrev-ref HEAD | xargs git log --graph --abbrev-commit --decorate --date=relative --first-parent"
 alias pnp="gup && gp"
 alias weather="curl wttr.in/paris"
@@ -50,3 +50,5 @@ pastefinish() {
 }
 zstyle :bracketed-paste-magic paste-init pasteinit
 zstyle :bracketed-paste-magic paste-finish pastefinish
+
+eval "$(starship init zsh)"
