@@ -43,6 +43,8 @@ Plug 'nvim-lualine/lualine.nvim'
 " Symbols Outline
 Plug 'liuchengxu/vista.vim'
 
+Plug 'barrett-ruth/import-cost.nvim'
+
 call plug#end()
 
 " ------- # Settings # -------
@@ -255,6 +257,14 @@ require('nvim-treesitter.configs').setup({
     enable = true,
   }
 })
+
+EOF
+
+" -------- # Import Cost # -------
+
+lua <<EOF
+
+require('import-cost').setup()
 
 EOF
 
