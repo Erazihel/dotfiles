@@ -27,6 +27,19 @@ Plug 'nvim-treesitter/nvim-treesitter', {'do': ':TSUpdate'}
 " Icons
 Plug 'nvim-tree/nvim-web-devicons'
 
+" Wilder
+if has('nvim')
+  function! UpdateRemotePlugins(...)
+    " Needed to refresh runtime files
+    let &rtp=&rtp
+    UpdateRemotePlugins
+  endfunction
+
+  Plug 'gelguy/wilder.nvim', { 'do': function('UpdateRemotePlugins') }
+else
+  Plug 'gelguy/wilder.nvim'
+endif
+
 " Coc Plugins
 Plug 'neoclide/coc-eslint', {'do': 'yarn install --frozen-lockfile'}
 Plug 'neoclide/coc-git', {'do': 'yarn install --frozen-lockfile'}
@@ -42,8 +55,6 @@ Plug 'nvim-lualine/lualine.nvim'
 
 " Symbols Outline
 Plug 'liuchengxu/vista.vim'
-
-Plug 'barrett-ruth/import-cost.nvim'
 
 call plug#end()
 
@@ -83,6 +94,7 @@ set undofile
 set updatetime=300
 set viewoptions=curdir,cursor,folds
 set wildmenu
+set wildmode=longest,list,full
 
 " ------- # Coc Extensions # -------
 
@@ -116,6 +128,24 @@ let g:fzf_preview_window = ['up:60%', 'ctrl-/']
 let g:vista_default_executive = 'coc'
 
 let g:vista_fzf_preview = ['right:50%']
+
+" ------- # Wilder # -------
+
+call wilder#setup({'modes': [':', '/', '?']})
+
+" 'border'            : 'single', 'double', 'rounded' or 'solid'
+"                     : can also be a list of 8 characters,
+"                     : see :h wilder#popupmenu_border_theme() for more details
+" 'highlights.border' : highlight to use for the border`
+call wilder#set_option('renderer', wilder#popupmenu_renderer(wilder#popupmenu_border_theme({
+      \ 'highlighter': wilder#basic_highlighter(),
+      \ 'highlights': {
+      \   'accent': wilder#make_hl('WilderAccent', 'Pmenu', [{}, {}, {'foreground': '#f4468f'}]),
+      \   'border': 'Normal',
+      \ },
+      \ 'border': 'rounded',
+      \ 'min_width': '100%',
+      \ })))
 
 " -------- # Custom Color Scheme # -------
 
@@ -260,14 +290,6 @@ require('nvim-treesitter.configs').setup({
 
 EOF
 
-" -------- # Import Cost # -------
-
-lua <<EOF
-
-require('import-cost').setup()
-
-EOF
-
 " -------- # Functions # -------
 
 function! GetProgress()
@@ -313,29 +335,38 @@ nnoremap  <leader>o   :Vista!!<cr>
 nnoremap  <leader>r   :registers<cr>
 nnoremap  <leader>s   :w<cr>
 nnoremap  <leader>w   :bd<cr>
-nnoremap  <c-j>       :bprev<cr>
-nnoremap  <c-k>       :bnext<cr>
+nnoremap  <C-j>       :bprev<cr>
+nnoremap  <C-k>       :bnext<cr>
 
 nnoremap  <leader>D   :CocDiagnostics<cr>
-nnoremap  <leader>d   <plug>(coc-definition)
-nnoremap  <leader>R   <plug>(coc-rename)
-nnoremap  <leader>a   <plug>(coc-codeaction)
-nnoremap  <leader>P   <plug>(coc-format)
-nnoremap  <c-p>       <plug>(coc-diagnostic-prev)
-nnoremap  <c-n>       <plug>(coc-diagnostic-next)
+nnoremap  <leader>d   <Plug>(coc-definition)
+nnoremap  <leader>R   <Plug>(coc-rename)
+nnoremap  <leader>a   <Plug>(coc-codeaction)
+nnoremap  <leader>P   <Plug>(coc-format)
+nnoremap  <C-p>       <Plug>(coc-diagnostic-prev)
+nnoremap  <C-n>       <Plug>(coc-diagnostic-next)
 
 nnoremap  <leader>Gd  :Git diff<cr>
 nnoremap  <leader>Gb  :Git blame<cr>
 nnoremap  <leader>Gm  :Git mergetool<cr>
-nnoremap  <leader>Gkb <plug>(coc-git-keepboth)
-nnoremap  <leader>Gkc <plug>(coc-git-keepcurrent)
-nnoremap  <leader>Gki <plug>(coc-git-keepincoming)
-nnoremap  <leader>Gn  <plug>(coc-git-nextconflict)
-nnoremap  <leader>Gp  <plug>(coc-git-prevconflict)
+nnoremap  <leader>Gkb <Plug>(coc-git-keepboth)
+nnoremap  <leader>Gkc <Plug>(coc-git-keepcurrent)
+nnoremap  <leader>Gki <Plug>(coc-git-keepincoming)
+nnoremap  <leader>Gn  <Plug>(coc-git-nextconflict)
+nnoremap  <leader>Gp  <Plug>(coc-git-prevconflict)
 
 vnoremap  .             :normal .<cr>
-vnoremap  <silent><c-s> :'<,'>sort<cr>
+vnoremap  <silent><C-S> :'<,'>sort<cr>
 
 " Tab navigation on autocompletion
 inoremap <expr> <Tab> coc#pum#visible() ? coc#pum#next(1) : "\<Tab>"
 inoremap <expr> <S-Tab> coc#pum#visible() ? coc#pum#prev(1) : "\<S-Tab>"
+
+" Change tab autocomplete for GitHub Copilot
+imap <silent><script><expr> <Right> copilot#Accept("\<CR>")
+let g:copilot_no_tab_map = v:true
+
+imap <silent><M-Right> <Plug>(copilot-accept-word)
+imap <M-]> <Plug>(copilot-next)
+imap <M-[> <Plug>(copilot-previous)
+
