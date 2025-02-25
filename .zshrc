@@ -7,7 +7,7 @@ ZSH_THEME="bullet-train"
 # Custom plugins may be added to ~/.oh-my-zsh/custom/plugins/
 # Example format: plugins=(rails git textmate ruby lighthouse)
 # Add wisely, as too many plugins slow down shell startup.
-plugins=(git docker-compose zsh-autosuggestions autojump brew gitfast npm zsh-syntax-highlighting you-should-use)
+plugins=(git docker docker-compose zsh-autosuggestions autojump brew gitfast npm zsh-syntax-highlighting you-should-use)
 
 source $ZSH/oh-my-zsh.sh
 
@@ -26,7 +26,7 @@ source ~/.externalzshrc
 alias zshconfig="nvim ~/.zshrc"
 alias gbdr="git fetch -p; git branch -vv | awk '/: gone]/{print $1}' | xargs git branch -D"
 alias glog="git rev-parse --abbrev-ref HEAD | xargs git log --graph --abbrev-commit --decorate --date=relative --first-parent"
-alias pnp="gup && gp"
+alias p="pnpm"
 alias weather="curl wttr.in/paris"
 alias vim="nvim"
 
@@ -52,3 +52,11 @@ zstyle :bracketed-paste-magic paste-init pasteinit
 zstyle :bracketed-paste-magic paste-finish pastefinish
 
 eval "$(starship init zsh)"
+
+# pnpm
+export PNPM_HOME="/Users/thomas.lepore/Library/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end
