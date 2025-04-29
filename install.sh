@@ -34,21 +34,10 @@ brew install neovim
 
 mkdir -p ~/.config/nvim
 
-if [ ! -d ~/.fzf ]; then
-  git clone https://github.com/junegunn/fzf.git ~/.fzf
-  ~/.fzf/install --all
-fi
+ln -sf $(pwd)/nvim/init.lua ~/.config/nvim/init.lua
+ln -sf $(pwd)/nvim/lua ~/.config/nvim/lua
 
-if [ ! -f ~/.config/nvim/autoload/plug.vim ]; then
-  curl \
-    -fLo ~/.config/nvim/autoload/plug.vim \
-    --create-dirs \
-    https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
-fi
-
-ln -sf $(pwd)/nvim/init.vim ~/.config/nvim/init.vim
-
-nvim +PlugInstall +qa
+nvim +qa
 echo Done!
 
 echo Installing Autojump..
