@@ -8,7 +8,7 @@ local opts = { noremap = true, silent = true }
 -- Buffer/File Navigation
 keymap("n", "<leader>b", ":Buffers<CR>", opts)
 keymap("n", "<leader>f", ":GFiles<CR>", opts)
-keymap("n", "<leader>g", ":Grep<CR>", opts)
+keymap("n", "<leader>g", ":Grep ")
 keymap("n", "<leader>h", ":History<CR>", opts)
 keymap("n", "<leader>k", ":map<CR>", opts)
 keymap("n", "<leader>n", ":Ex<CR>", opts)

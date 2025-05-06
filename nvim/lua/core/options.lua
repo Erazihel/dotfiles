@@ -15,7 +15,6 @@ opt.completeopt = { "noinsert", "menuone", "noselect" }
 opt.cursorline = true
 opt.expandtab = true
 opt.foldenable = false
-opt.foldenable = false
 opt.foldmethod = "indent"
 opt.hidden = true
 opt.history = 1000

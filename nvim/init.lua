@@ -22,14 +22,15 @@ vim.opt.rtp:prepend(lazypath)
 vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
 
-
 require("core.commands")
 require("core.keymaps")
 require("core.options")
 require("core.plugins")
 require("core.ui")
 
--- Setup LSP, Treesitter, etc.
+-- Setup LSP, Treesitter, Cmp, etc.
+
+require("plugins.cmp")
 require("plugins.lsp")
 require("plugins.treesitter")
 require("plugins.lualine")
