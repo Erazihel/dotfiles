@@ -26,7 +26,11 @@ keymap("n", "<leader>D", vim.diagnostic.setqflist, opts)
 keymap("n", "<leader>d", vim.lsp.buf.definition, opts)
 keymap("n", "<leader>R", vim.lsp.buf.rename, opts)
 keymap("n", "<leader>a", vim.lsp.buf.code_action, opts)
-keymap("n", "<leader>P", vim.lsp.buf.format, opts)
+keymap("n", "<leader>P", function()
+  vim.lsp.buf.format({
+    filter = function(client) return client.name ~= "ts_ls" end
+  })
+end, opts)
 keymap("n", "<C-p>", vim.diagnostic.goto_prev, opts)
 keymap("n", "<C-n>", vim.diagnostic.goto_next, opts)
 
@@ -38,3 +42,10 @@ keymap("n", "<leader>Gm", ":Git mergetool<CR>", opts)
 -- Visual mode
 keymap("v", ".", ":normal .<CR>", opts)
 keymap("v", "<C-S>", "'<,'>sort<CR>", opts)
+
+-- Copilot
+keymap('i', '<Right>', 'copilot#Accept("\\<CR>")', {
+  expr = true,
+  replace_keycodes = false
+})
+vim.g.copilot_no_tab_map = true

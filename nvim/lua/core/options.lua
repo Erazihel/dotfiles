@@ -44,4 +44,4 @@ opt.wildmode = { "longest", "list", "full" }
 opt.writebackup = false
 
 -- Leader
-vim.g.mapleader = " "
+g.mapleader = " "

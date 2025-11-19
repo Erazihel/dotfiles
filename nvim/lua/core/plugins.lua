@@ -18,7 +18,7 @@ vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
   -- Import avante plugin specification
-  require("plugins.avante"),
+  -- require("plugins.avante"),
 
   -- Theme
   { "rmehri01/onenord.nvim" },
@@ -49,4 +49,7 @@ require("lazy").setup({
 
   -- Symbols outline replacement
   { "stevearc/aerial.nvim" },
+
+  -- Copilot
+  { "github/copilot.vim" },
 })
