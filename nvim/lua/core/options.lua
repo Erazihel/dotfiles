@@ -18,13 +18,14 @@ opt.foldenable = false
 opt.foldmethod = "indent"
 opt.hidden = true
 opt.history = 1000
-opt.laststatus = 2
+opt.laststatus = 0
 opt.linebreak = true
 opt.number = true
-opt.ruler = true
+opt.ruler=false
 opt.scrolloff = 3
 opt.shiftwidth = 2
 opt.shortmess:append("ctT")
+opt.showcmd = false
 opt.showmode = false
 opt.signcolumn = "yes"
 opt.smartcase = true

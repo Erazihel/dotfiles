@@ -28,3 +28,24 @@ require('mason-lspconfig').setup({
     end,
   },
 })
+
+vim.diagnostic.config({
+  virtual_text = false,
+  signs = { text = { ['1'] = '●', ['2'] = '●', ['3'] = '●', ['4'] = '●' } },
+  underline = true,
+  severity_sort = true,
+  float = {
+    border = 'rounded',
+    header = '',
+    source = 'if_many',
+  },
+})
+
+vim.api.nvim_create_autocmd("CursorHold", {
+  callback = function()
+    vim.diagnostic.open_float(nil, {
+      scope = 'cursor',
+      focusable = false,
+    })
+  end
+})

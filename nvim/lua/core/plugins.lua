@@ -17,6 +17,9 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
+  -- Import avante plugin specification
+  require("plugins.avante"),
+
   -- Theme
   { "rmehri01/onenord.nvim" },
 

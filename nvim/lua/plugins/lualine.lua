@@ -18,7 +18,7 @@ end
 
 -- Lualine sections configuration
 local sections_config = {
-  lualine_a = { { 'mode', fmt = function(res) return '◎' end } },
+  lualine_a = { { 'mode', fmt = function() return '◎' end } },
   lualine_b = {
     { 'diff', symbols = { added = '󰜄 ', modified = '󱔀 ', removed = '󰛲 ' } },
     'diagnostics',
@@ -30,7 +30,7 @@ local sections_config = {
 }
 
 -- Winbar configuration (file path and breadcrumbs)
-local winbar_config = {
+--[[ local winbar_config = {
   lualine_a = {},
   lualine_b = { { 'filetype', icon_only = true, separator = '' }, 'filename' },
   lualine_c = {},
@@ -38,11 +38,19 @@ local winbar_config = {
   lualine_y = {},
   lualine_z = {}
 }
+--]]
 
 -- Setup Lualine with the sections and winbar configuration
 require('lualine').setup({
   inactive_sections = sections_config,
-  inactive_winbar = winbar_config,
   sections = sections_config,
-  winbar = winbar_config
+  --  inactive_winbar = winbar_config,
+  --  winbar = winbar_config
+  options = {
+    disabled_filetypes = {
+      statusline = {
+        "Avante", "AvanteInput", "AvanteSelectedFiles"
+      },
+    }
+  }
 })
