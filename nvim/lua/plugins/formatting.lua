@@ -6,13 +6,9 @@ return {
 	event = { "BufWritePre" },
 	cmd = { "ConformInfo", "Format" },
 	opts = {
-		format_on_save = function(bufnr)
-			return {
-				bufnr = bufnr,
-				timeout_ms = 500,
-				lsp_fallback = true,
-			}
-		end,
+		format_after_save = {
+			lsp_fallback = true,
+		},
 		formatters_by_ft = {
 			lua = { "stylua" },
 			javascript = { "eslint_d" },
