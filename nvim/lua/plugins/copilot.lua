@@ -4,7 +4,7 @@
 return {
   {
     "zbirenbaum/copilot.lua",
-    enabled = false, -- Disabled due to usage limit
+    enabled = true,
     cmd = "Copilot",
     event = "InsertEnter",
     config = function()
@@ -27,6 +27,7 @@ return {
         suggestion = {
           enabled = true,
           auto_trigger = true,
+          hide_during_completion = true,
           debounce = 75,
           keymap = {
             accept = "<Right>",

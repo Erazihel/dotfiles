@@ -52,6 +52,8 @@ zstyle :bracketed-paste-magic paste-finish pastefinish
 
 eval "$(starship init zsh)"
 
+eval "$(atuin init zsh --disable-up-arrow)"
+
 # pnpm
 export PNPM_HOME="/Users/thomas.lepore/Library/pnpm"
 case ":$PATH:" in
@@ -61,3 +63,6 @@ esac
 # pnpm end
 #
 export PATH="$HOME/.local/bin:$PATH"
+
+# Added by Antigravity
+export PATH="/Users/thomas.lepore/.antigravity/antigravity/bin:$PATH"

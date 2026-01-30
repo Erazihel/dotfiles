@@ -1,46 +1,70 @@
 -- plugins/fzf.lua
--- FZF fuzzy finder (faster than Telescope for this setup)
---
--- Note: Eagerly loaded (lazy = false) because:
---   1. Lightweight plugin with minimal startup cost (~5-10ms)
---   2. Used very frequently in daily workflows
---   3. Lazy loading would introduce first-use delay
---   4. Provides immediate availability for muscle-memory workflows
+-- fzf-lua for fast fuzzy finding with modern UI
 
 return {
-	-- FZF binary
-	{
-		"junegunn/fzf",
-		lazy = false,
-		build = "./install --bin",
-	},
+  "ibhagwan/fzf-lua",
+  dependencies = { "nvim-tree/nvim-web-devicons" },
+  cmd = { "FzfLua" },
+  keys = {
+    { "<leader>f", function() require("fzf-lua").git_files() end, desc = "Find git files" },
+    { "<leader>F", function() require("fzf-lua").files() end, desc = "Find all files" },
+    { "<leader>b", function() require("fzf-lua").buffers() end, desc = "Find buffers" },
+    { "<leader>H", function() require("fzf-lua").oldfiles() end, desc = "Recent files" },
+  },
+  init = function()
+    -- Register ui_select early so vim.ui.select always uses fzf
+    -- This lazy-loads fzf-lua on first vim.ui.select call
+    ---@diagnostic disable-next-line: duplicate-set-field
+    vim.ui.select = function(...)
+      require("fzf-lua").register_ui_select()
+      return vim.ui.select(...)
+    end
+  end,
+  config = function()
+    local fzf = require("fzf-lua")
 
-	-- FZF Vim integration
-	{
-		"junegunn/fzf.vim",
-		lazy = false,
-		dependencies = { "junegunn/fzf" },
-		config = function()
-			-- FZF layout configuration
-			vim.g.fzf_layout = {
-				window = {
-					width = 0.9,
-					height = 0.8,
-				},
-			}
+    fzf.setup({
+      "default-title",
+      winopts = {
+        width = 0.9,
+        height = 0.8,
+        border = "rounded",
+        preview = {
+          layout = "vertical",
+          vertical = "up:60%",
+          border = "rounded",
+        },
+      },
+      fzf_opts = {
+        ["--layout"] = "reverse",
+      },
+      keymap = {
+        fzf = {
+          ["ctrl-q"] = "select-all+accept",
+          ["ctrl-p"] = "toggle-preview",
+        },
+      },
+      files = {
+        git_icons = true,
+        file_icons = true,
+      },
+      git = {
+        files = {
+          git_icons = true,
+          file_icons = true,
+        },
+      },
+      buffers = {
+        file_icons = true,
+        sort_lastused = true,
+      },
+      grep = {
+        rg_opts = "--column --line-number --no-heading --color=always --hidden --smart-case"
+          .. " --glob '!node_modules/*' --glob '!.git/*' --glob '!dist/*' --glob '!build/*'",
+        file_icons = true,
+        git_icons = true,
+      },
+    })
 
-			vim.g.fzf_preview_window = { "up,60%", "ctrl-p" }
-
-			-- Create Grep command
-			vim.api.nvim_create_user_command("Grep", function(opts)
-				local query = table.concat(opts.fargs, " ")
-				local cmd = "rg --column --line-number --no-heading --color=always --hidden --smart-case -- "
-					.. vim.fn.shellescape(query)
-				vim.fn["fzf#vim#grep"](cmd, 1, vim.fn["fzf#vim#with_preview"](), opts.bang and 1 or 0)
-			end, {
-				bang = true,
-				nargs = "*",
-			})
-		end,
-	},
+  end,
 }

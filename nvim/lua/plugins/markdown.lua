@@ -1,14 +1,13 @@
 -- plugins/markdown.lua
--- Markdown preview
+-- Markdown preview and inline rendering
 
 return {
+  -- Browser-based markdown preview
   {
     "iamcco/markdown-preview.nvim",
     cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
     ft = { "markdown" },
-    build = function()
-      vim.fn["mkdp#util#install"]()
-    end,
+    build = "cd app && npm install",
     keys = {
       {
         "<leader>mp",
@@ -26,5 +25,19 @@ return {
       vim.g.mkdp_echo_preview_url = 0
       vim.g.mkdp_page_title = "${name}"
     end,
+  },
+
+  -- Inline markdown rendering in buffer
+  {
+    "MeanderingProgrammer/render-markdown.nvim",
+    ft = "markdown",
+    dependencies = {
+      "nvim-treesitter/nvim-treesitter",
+      "nvim-tree/nvim-web-devicons",
+    },
+    keys = {
+      { "<leader>mr", "<cmd>RenderMarkdown toggle<cr>", desc = "Toggle render-markdown", ft = "markdown" },
+    },
+    opts = {},
   },
 }

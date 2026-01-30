@@ -51,6 +51,11 @@ cd ..
 rm -rf autojump
 echo Done!
 
+echo Installing Atuin
+brew install atuin
+echo 'eval "$(atuin init zsh --disable-up-arrow)"' >>~/.zshrc
+echo Done!
+
 echo Installing fonts..
 git clone https://github.com/powerline/fonts.git --depth=1
 cd fonts

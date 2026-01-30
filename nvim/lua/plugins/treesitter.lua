@@ -1,5 +1,5 @@
 -- plugins/treesitter.lua
--- Treesitter with textobjects and enhanced features
+-- Treesitter with textobjects and autotag
 
 return {
   {
@@ -9,30 +9,10 @@ return {
     event = { "BufReadPre", "BufNewFile" },
     dependencies = {
       "nvim-treesitter/nvim-treesitter-textobjects",
+      "windwp/nvim-ts-autotag",
     },
     config = function()
       require("nvim-treesitter.configs").setup({
-        ensure_installed = {
-          "bash",
-          "css",
-          "dockerfile",
-          "gitignore",
-          "graphql",
-          "html",
-          "javascript",
-          "json",
-          "lua",
-          "luadoc",
-          "markdown",
-          "markdown_inline",
-          "regex",
-          "scss",
-          "tsx",
-          "typescript",
-          "vim",
-          "vimdoc",
-          "yaml",
-        },
         auto_install = true,
         highlight = {
           enable = true,
@@ -40,7 +20,7 @@ return {
           -- Disable for very large files
           disable = function(lang, buf)
             local max_filesize = 100 * 1024 -- 100 KB
-            local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
+            local ok, stats = pcall((vim.uv or vim.loop).fs_stat, vim.api.nvim_buf_get_name(buf))
             if ok and stats and stats.size > max_filesize then
               return true
             end
@@ -49,26 +29,13 @@ return {
         indent = {
           enable = true,
         },
-        -- Incremental selection
-        incremental_selection = {
-          enable = true,
-          keymaps = {
-            init_selection = "<C-space>",
-            node_incremental = "<C-space>",
-            scope_incremental = false,
-            node_decremental = "<bs>",
-          },
-        },
         -- Textobjects for advanced navigation
         textobjects = {
           select = {
             enable = true,
             lookahead = true,
             keymaps = {
-              ["af"] = "@function.outer",
-              ["if"] = "@function.inner",
-              ["ac"] = "@class.outer",
-              ["ic"] = "@class.inner",
+              -- Note: af/if/ac/ic are handled by mini.ai (loads later, takes precedence)
               ["aa"] = "@parameter.outer",
               ["ia"] = "@parameter.inner",
             },
@@ -96,14 +63,16 @@ return {
           swap = {
             enable = true,
             swap_next = {
-              ["<leader>sn"] = "@parameter.inner",
+              ["<leader>csn"] = "@parameter.inner",
             },
             swap_previous = {
-              ["<leader>sp"] = "@parameter.inner",
+              ["<leader>csp"] = "@parameter.inner",
             },
           },
         },
       })
+
+      -- Setup autotag for HTML/JSX/TSX/Vue
+      require("nvim-ts-autotag").setup()
     end,
-  },
-}
+  },}

@@ -34,9 +34,6 @@ return {
           end,
         },
         preselect = cmp.PreselectMode.None,
-        completion = {
-          completeopt = "menu,menuone,noinsert,noselect",
-        },
         mapping = cmp.mapping.preset.insert({
           ["<C-Space>"] = cmp.mapping.complete(),
           ["<C-b>"] = cmp.mapping.scroll_docs(-4),
@@ -63,6 +60,7 @@ return {
           end, { "i", "s" }),
         }),
         sources = cmp.config.sources({
+          { name = "lazydev", group_index = 0 },
           { name = "nvim_lsp", priority = 1000 },
           { name = "luasnip", priority = 750 },
           { name = "buffer", priority = 500, keyword_length = 3 },
@@ -119,7 +117,7 @@ return {
           documentation = cmp.config.window.bordered(),
         },
         experimental = {
-          ghost_text = true, -- Show inline completion preview
+          ghost_text = false, -- Disabled to avoid conflict with Copilot inline suggestions
         },
       })
 
