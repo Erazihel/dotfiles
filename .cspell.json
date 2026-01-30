@@ -1,29 +1,29 @@
 {
-  "caseSensitive": false,
-  "allowCompoundWords": true,
-  "ignoreRegExpList": [
-    "/\\w*\\d{2,}\\w*/g",
-    "/#[0-9a-fA-F]{3,8}/g",
-    "/0x[0-9a-fA-F]+/g",
-    "/https?:\\/\\/[^\\s]+/g"
-  ],
+  "import": ["@cspell/dict-fr-fr/cspell-ext.json"],
+  "language": "en,fr",
+  "numSuggestions": 8,
+  "version": "0.2",
   "words": [
     "augroup",
     "autocmd",
     "Axeptio",
     "breakindent",
     "bufnr",
+    "CIPA",
     "clsx",
     "cmdheight",
     "conform",
     "copilot",
     "cursorline",
     "CUSTOMERIO",
+    "dnd",
     "dotfiles",
+    "ENTRAIDE",
     "evt",
     "foldenable",
     "foldmethod",
     "fugitive",
+    "GCU",
     "gitsigns",
     "gql",
     "hlsearch",
@@ -35,6 +35,7 @@
     "nextjs",
     "nuxt",
     "nvim",
+    "pangea",
     "pumblend",
     "pumheight",
     "relativenumber",
@@ -50,24 +51,14 @@
     "spellsuggest",
     "splitbelow",
     "splitright",
+    "SWR",
     "termguicolors",
     "treesitter",
     "undofile",
+    "vite",
     "vitest",
     "zod"
   ],
-  "version": "0.2",
-  "maxNumberOfProblems": 100,
-  "dictionaryDefinitions": [],
-  "dictionaries": [
-    "typescript",
-    "node",
-    "html",
-    "css",
-    "bash",
-    "softwareTerms"
-  ],
-  "numSuggestions": 8,
   "languageSettings": [
     {
       "dictionaries": [
@@ -81,6 +72,20 @@
       "languageId": "*"
     }
   ],
+  "ignorePaths": [
+    "*.lock",
+    ".git",
+    ".next",
+    ".nuxt",
+    "build",
+    "coverage",
+    "dist",
+    "node_modules",
+    "package-lock.json",
+    "pnpm-lock.yaml",
+    "yarn.lock"
+  ],
+  "caseSensitive": false,
   "minWordLength": 3,
   "enabledLanguageIds": [
     "bash",
@@ -101,19 +106,23 @@
     "vue",
     "yaml"
   ],
-  "ignorePaths": [
-    "*.lock",
-    ".git",
-    ".next",
-    ".nuxt",
-    "build",
-    "coverage",
-    "dist",
-    "node_modules",
-    "package-lock.json",
-    "pnpm-lock.yaml",
-    "yarn.lock"
+  "dictionaryDefinitions": [],
+  "dictionaries": [
+    "typescript",
+    "node",
+    "html",
+    "css",
+    "bash",
+    "softwareTerms",
+    "fr-fr"
   ],
-  "language": "en-US"
+  "ignoreRegExpList": [
+    "/\\w*\\d{2,}\\w*/g",
+    "/#[0-9a-fA-F]{3,8}/g",
+    "/0x[0-9a-fA-F]+/g",
+    "/https?:\\/\\/[^\\s]+/g"
+  ],
+  "allowCompoundWords": true,
+  "maxNumberOfProblems": 100
 }
 

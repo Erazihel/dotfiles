@@ -34,9 +34,6 @@ return {
           end,
         },
         preselect = cmp.PreselectMode.None,
-        completion = {
-          completeopt = "menu,menuone,noinsert,noselect",
-        },
         mapping = cmp.mapping.preset.insert({
           ["<C-Space>"] = cmp.mapping.complete(),
           ["<C-b>"] = cmp.mapping.scroll_docs(-4),
@@ -119,7 +116,7 @@ return {
           documentation = cmp.config.window.bordered(),
         },
         experimental = {
-          ghost_text = true, -- Show inline completion preview
+          ghost_text = false, -- Disabled to avoid conflict with Copilot inline suggestions
         },
       })
 

@@ -23,6 +23,12 @@ vim.opt.rtp:prepend(lazypath)
 vim.g.mapleader = " "
 vim.g.maplocalleader = "\\"
 
+-- Disable unused providers for faster startup (must be before plugin load)
+vim.g.loaded_perl_provider = 0
+vim.g.loaded_ruby_provider = 0
+vim.g.loaded_node_provider = 0
+vim.g.loaded_python3_provider = 0
+
 -- Load configuration
 require("config.options")
 require("config.keymaps")
@@ -34,8 +40,7 @@ require("lazy").setup("plugins", {
 		lazy = true, -- Enable lazy loading by default
 	},
 	checker = {
-		enabled = true, -- Check for plugin updates
-		notify = false, -- Don't notify on update
+		enabled = false,
 	},
 	performance = {
 		rtp = {
@@ -50,9 +55,3 @@ require("lazy").setup("plugins", {
 		},
 	},
 })
-
--- Disable unused providers for faster startup
-vim.g.loaded_perl_provider = 0
-vim.g.loaded_ruby_provider = 0
-vim.g.loaded_node_provider = 0
-vim.g.loaded_python3_provider = 0
